@@ -1,9 +1,0 @@
----
-
-- name: swatch
-  hosts: all
-  user: lyrasis
-  remote_user: lyrasis
-  sudo: yes
-  roles:
-    - lyrasis-swatch
