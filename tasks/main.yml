@@ -70,7 +70,7 @@
   - name: add the swatch conf for apache error.log
     template:
       src=error.conf.j2
-      dest=/etc/swatch/docker.log.conf
+      dest=/etc/swatch/error.log.conf
       owner=root
       group=root
       mode=0700
