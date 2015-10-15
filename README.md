@@ -1,6 +1,9 @@
 Ansible Swatch Role
 =========
 
+DO NOT USE THIS YET :-)
+=========
+
 An Ansible role to install Swatch: The Simple Log Watcher
 
 Requirements
