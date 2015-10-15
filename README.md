@@ -1,9 +1,6 @@
 Ansible Swatch Role
 =========
 
-DO NOT USE THIS YET :-)
-=========
-
 An Ansible role to install Swatch: The Simple Log Watcher
 
 Requirements
@@ -39,7 +36,7 @@ You'll also need to set {{ email_to }} somewhere to have email delivered.
 Example Playbook
 ----------------
 
-```ansible-playbook -i [some inventory file] -e ansible_ssh_port=[port] -u user -K ./swatch.yml --limit=[server] --tags=swatch --extra-vars '{"logs": ["syslog", "auth.log"]}'````
+```ansible-playbook -i [some inventory file] -e ansible_ssh_port=[port] -u user -K ./swatch.yml --limit=[server] --tags=swatch --extra-vars '{"logs": ["syslog", "auth.log"]}' --extra-vars "email_to=none@example.com" ```
 
 Author Information
 ------------------
