@@ -1,0 +1,90 @@
+---
+# A simple role to install SWATCH log watcher
+
+  - name: Update APT package cache
+    action: apt update_cache=yes
+    tags:
+      - swatch
+
+  - name: Install all those dependencies
+    apt: pkg={{item}} state=present
+    with_items:
+      - libbit-vector-perl
+      - libcarp-clan-perl
+      - libdate-calc-perl
+      - libdate-calc-xs-perl
+      - libfile-tail-perl
+      - swatch
+    tags:
+      - swatch
+
+  - name: make sure that swatch conf dir is there
+    file:
+      path=/etc/swatch
+      state=directory
+      owner=root
+      group=root
+    tags:
+      - swatch
+
+  - name: add the swatch init script
+    template:
+      src=swatchd.j2
+      dest=/etc/init.d/swatchd
+      owner=root
+      group=root
+      mode=0755
+    tags:
+      - swatch
+
+  - name: add the swatch conf for syslog
+    template:
+      src=syslog.conf.j2
+      dest=/etc/swatch/syslog.conf
+      owner=root
+      group=root
+      mode=0700
+    tags:
+      - swatch
+
+  - name: add the swatch conf for auth.log
+    template:
+      src=auth.conf.j2
+      dest=/etc/swatch/auth.log.conf
+      owner=root
+      group=root
+      mode=0700
+    tags:
+      - swatch
+
+  - name: add the swatch conf for docker.log
+    template:
+      src=syslog.conf.j2
+      dest=/etc/swatch/docker.log.conf
+      owner=root
+      group=root
+      mode=0700
+    tags:
+      - swatch
+
+  - name: stop swatch if it's already there
+    service:
+      name=swatchd
+      state=stopped
+#      must_exist=no
+    tags:
+      - swatch
+
+  - name: Just make sure swatch is not already running
+    command: /usr/bin/pkill -9 swatch
+    ignore_errors: True
+    tags:
+      - swatch
+
+  - name: start  swatch
+    service:
+      name=swatchd
+      enabled=yes
+      state=started
+    tags:
+      - swatch

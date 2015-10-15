@@ -1,0 +1,11 @@
+perlcode my ($month, $day, $time, $host_name, @message) = split(/\s+/);
+
+watchfor /exited/
+        exec echo "Subject:SWATCH Found An Exited Container On $host_name\n\n$_\n" | sendmail "{{ email_to }}"
+
+watchfor /ERROR|error/
+        exec echo "Subject:SWATCH Found A Docker Log Error On $host_name\n\n$_\n" | sendmail "{{ email_to }}"
+
+watchfor /OutOfMemoryError/
+        exec echo "Subject:SWATCH Found Docker OutOfMemoryErrors on $host_name\n\n$_\n" | sendmail "{{ email_to }}"
+
