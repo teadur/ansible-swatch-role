@@ -71,9 +71,9 @@
     service:
       name=swatchd
       state=stopped
-#      must_exist=no
     tags:
       - swatch
+    ignore_errors: True
 
   - name: Just make sure swatch is not already running
     command: /usr/bin/pkill -9 swatch
@@ -81,7 +81,7 @@
     tags:
       - swatch
 
-  - name: start  swatch
+  - name: Now start swatch
     service:
       name=swatchd
       enabled=yes
