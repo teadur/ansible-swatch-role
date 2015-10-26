@@ -26,10 +26,9 @@ Which logs to install is sent via the cli extra-vars like
 
 Those extra-vars are used by templates/swatchd.j2 where `LOGS="{{ logs|join(' ') }}"` set up the startup script to watch logs in or below /var/log.
 
-To start the Swatch for each type of log & fire up all four do `--extra-vars '{"logs": ["syslog", "auth.log", "docker.log", "/apache/error.log"]}'`
+To start the Swatch for each type of log & fire up all four do 
+```--extra-vars '{"logs": ["syslog", "auth.log", "docker.log", "/apache/error.log"]}'```
 
-You do need the `/apache/error.log` to be set more like a path like that. Have a look at the bash in swatchd.j2, it does a little replace `${i/\//-}` to be able to use that as
-both a path and a file name. 
 
 You'll also need to set {{ email_to }} somewhere to have email delivered.
 
@@ -37,6 +36,16 @@ Example Playbook
 ----------------
 
 ```ansible-playbook -i [some inventory file] -e ansible_ssh_port=[port] -u user -K ./swatch.yml --limit=[server] --tags=swatch --extra-vars '{"logs": ["syslog", "auth.log"]}' --extra-vars "email_to=none@example.com" ```
+
+We only have some servers that run Apache and use the SoftLayer Dynamic Inventory script to handle inventory. All our servers are tagged at SoftLayer so we can use the `--limit` in Ansible to run against many servers at once, here's how I only install the apache swatch on our Apache servers:
+```ansible-playbook -i softlayer.py -e ansible_ssh_port=22 -u user -K ./swatch.yml --limit=apache --tags=swatch --extra-vars '{"logs": ["syslog", "auth.log", "/apache/error.log"]}' --extra-vars "email_to=none@example.com"```
+
+here's how I only install Swatch on our servers runing Docker:
+```ansible-playbook -i softlayer.py -e ansible_ssh_port=22 -u user -K ./swatch.yml --limit=docker --tags=swatch --extra-vars '{"logs": ["syslog", "auth.log", "docker.log"]}' --extra-vars "email_to=none@example.com"```
+
+
+You do need the `/apache/error.log` to be set more like a path like that. Have a look at the bash in swatchd.j2, it does a little replace `${i/\//-}` to be able to use that as
+both a path and a file name. 
 
 Author Information
 ------------------
