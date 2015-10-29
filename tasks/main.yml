@@ -59,7 +59,7 @@
 
   - name: add the swatch conf for docker.log
     template:
-      src=syslog.conf.j2
+      src=docker.conf.j2
       dest=/etc/swatch/docker.log.conf
       owner=root
       group=root
