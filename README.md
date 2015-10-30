@@ -1,7 +1,7 @@
 Ansible Swatch Role
 =========
 
-An Ansible role to install Swatch: The Simple Log Watcher
+An Ansible role to install Swatch: The Simple Log Watcher with a handy Slack integration
 
 Requirements
 ------------
@@ -45,8 +45,8 @@ Those vars can be used to build a shell script like this:
 ```
 #!/bin/bash
 ERROR=$1
-curl -X POST --data-urlencode 'payload={"channel": "{{ swatch_channel }}", "username": "{{ swatch_username }}", "text": "{{ swatch_error_text }}", "icon_emoji": "{{ swatch_icon }}"}' \
- {{ swatch_webhook_url }}
+curl -X POST --data-urlencode 'payload={"channel": "{{ slack_swatch_channel }}", "username": "{{ slack_swatch_username }}", "text": "{{ slack_swatch_error_text }}", "icon_emoji": "{{ slack_swatch_icon }}"}' \
+ {{ slack_swatch_webhook_url }}
 
 ```
 That shell script ends up in `/usr/local/bin/slack-swatch.sh`
