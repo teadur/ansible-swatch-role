@@ -34,11 +34,11 @@ You'll also need to set {{ email_to }} somewhere to have email delivered.
 
 This role will also post to Slack from swatch using curl in a shell script. This uses the following vars:
 ```
-swatch_channel: "#swatch"
-swatch_username: "webhookbot"
-swatch_error_text: "Swatch error from server '$HOSTNAME': '"'$ERROR'"'" " 
-swatch_icon: ":bug:"  
-swatch_webhook_url: "https://hooks.slack.com/services/EGGHOP/PUMPkin/L33t"
+slack_swatch_channel: "#swatch"
+slack_swatch_username: "webhookbot"
+slack_swatch_error_text: "Swatch error from server '$HOSTNAME': '"'$ERROR'"'" " 
+slack_swatch_icon: ":bug:"  
+slack_swatch_webhook_url: "https://hooks.slack.com/services/EGGHOP/PUMPkin/L33t"
 ```
 
 Those vars can be used to build a shell script like this:
