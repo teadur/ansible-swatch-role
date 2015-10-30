@@ -49,7 +49,7 @@ curl -X POST --data-urlencode 'payload={"channel": "{{ swatch_channel }}", "user
  {{ swatch_webhook_url }}
 
 ```
-That shell script ends up in `/usr/local/bin/slack.sh`
+That shell script ends up in `/usr/local/bin/slack-swatch.sh`
 
 Example Playbook
 ----------------

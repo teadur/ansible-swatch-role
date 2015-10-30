@@ -37,6 +37,16 @@
     tags:
       - swatch
 
+  - name: add in the slack swatch integration shell script
+    template:
+      src=slack-swatch.sh.j2
+      dest=/usr/local/bin/slack-swatch.sh
+      owner=root
+      group=root
+      mode=0755
+    tags:
+      - swatch
+
   - name: add the swatch conf for syslog
     template:
       src=syslog.conf.j2
