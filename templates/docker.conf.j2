@@ -10,3 +10,6 @@ watchfor /ERROR|error/
 watchfor /OutOfMemoryError/
         exec echo "Subject:SWATCH Found Docker OutOfMemoryErrors on $host_name\n\n$_\n" | sendmail "{{ email_to }}"
 
+watchfor /error|ERROR/
+       exec /usr/local/bin/slack-swatch.sh '$_'
+

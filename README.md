@@ -32,14 +32,15 @@ To start the Swatch for each type of log & fire up all four do
 
 You'll also need to set {{ email_to }} somewhere to have email delivered.
 
-This role will also post to Slack from swatch using curl in a shell script. This uses the following vars:
+This role will also post to Slack from swatch using curl in a shell script. This uses the following vars with examples:
 ```
-slack_swatch_channel: "#swatch"
-slack_swatch_username: "webhookbot"
-slack_swatch_error_text: "Swatch error from server '$HOSTNAME': '"'$ERROR'"'" " 
-slack_swatch_icon: ":bug:"  
-slack_swatch_webhook_url: "https://hooks.slack.com/services/EGGHOP/PUMPkin/L33t"
+slack_swatch_channel: "swatch"
+slack_swatch_username: "swatchbot"
+slack_swatch_error_text: " Swatch error from : _'$HOSTNAME'_ : `\'\"\'$ERROR\'\"\'` "
+slack_swatch_icon: ":bangbang:" 
+slack_swatch_webhook_url: "https://hooks.slack.com/services/bloop/dodo/something"
 ```
+that `slack_swatch_error_text:` can be a bit tricky with all the quotes and stuff.
 
 Those vars can be used to build a shell script like this:
 ```

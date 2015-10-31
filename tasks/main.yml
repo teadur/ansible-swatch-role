@@ -1,10 +1,10 @@
 ---
 # A simple role to install SWATCH log watcher
 
-  - name: Update APT package cache
-    action: apt update_cache=yes
-    tags:
-      - swatch
+#  - name: Update APT package cache
+#    action: apt update_cache=yes
+#    tags:
+#      - swatch
 
   - name: Install all those dependencies
     apt: pkg={{item}} state=present
