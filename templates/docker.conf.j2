@@ -6,10 +6,13 @@ watchfor /exited/
 ignore /404/
 watchfor /ERROR|error/
         exec echo "Subject:SWATCH Found A Docker Log Error On $host_name\n\n$_\n" | sendmail "{{ email_to }}"
+	limit track_by=message, type=limit, count=2, seconds=240
 
 watchfor /OutOfMemoryError/
         exec echo "Subject:SWATCH Found Docker OutOfMemoryErrors on $host_name\n\n$_\n" | sendmail "{{ email_to }}"
+	limit track_by=message, type=limit, count=2, seconds=240
 
 watchfor /error|ERROR/
-       exec /usr/local/bin/slack-swatch.sh '$_'
+       	exec /usr/local/bin/slack-swatch.sh '$_'
+	limit track_by=message, type=limit, count=2, seconds=240
 
