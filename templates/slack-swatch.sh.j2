@@ -1,4 +1,4 @@
 #!/bin/bash
 ERROR=$1
-curl -X POST --data-urlencode 'payload={"channel": "{{ slack_swatch_channel }}", "username": "{{ slack_swatch_username }}", "text": "{{ slack_swatch_error_text }}", "icon_emoji": "{{ slack_swatch_icon }}"}' \
-{{ slack_swatch_webhook_url }}
+curl -X POST --data-urlencode 'payload={"channel": "{{ swatch_slack_channel }}", "username": "{{ swatch_slack_username }}", "text": "{{ swatch_slack_error_text }}", "icon_emoji": "{{ swatch_slack_icon }}"}' \
+{{ swatch_slack_webhook_url }}

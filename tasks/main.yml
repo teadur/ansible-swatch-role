@@ -44,46 +44,18 @@
       owner=root
       group=root
       mode=0755
+    when: swatch_slack_channel is defined and swatch_slack_username is defined
     tags:
       - swatch
 
-  - name: add the swatch conf for syslog
+  - name: add the swatch conf files
     template:
-      src=syslog.conf.j2
-      dest=/etc/swatch/syslog.conf
+      src="{{ item }}.conf.j2"
+      dest="{{ item }}.log.conf"
       owner=root
       group=root
       mode=0700
-    tags:
-      - swatch
-
-  - name: add the swatch conf for auth.log
-    template:
-      src=auth.conf.j2
-      dest=/etc/swatch/auth.log.conf
-      owner=root
-      group=root
-      mode=0700
-    tags:
-      - swatch
-
-  - name: add the swatch conf for docker.log
-    template:
-      src=docker.conf.j2
-      dest=/etc/swatch/docker.log.conf
-      owner=root
-      group=root
-      mode=0700
-    tags:
-      - swatch
-
-  - name: add the swatch conf for apache error.log
-    template:
-      src=error.conf.j2
-      dest=/etc/swatch/error.log.conf
-      owner=root
-      group=root
-      mode=0700
+    with_items: swatch_logs
     tags:
       - swatch
 
