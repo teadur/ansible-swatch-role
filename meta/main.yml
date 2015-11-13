@@ -1,0 +1,14 @@
+---
+
+galaxy_info:
+  author: DTS
+  description: Install swatch
+  license: MIT
+  min_ansible_version: 1.4
+  platforms:
+    - name: Ubuntu
+      versions:
+        - all
+  categories:
+    - cloud
+dependencies: []
