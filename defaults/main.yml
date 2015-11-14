@@ -1,0 +1,15 @@
+---
+
+swatch_email_to: false
+swatch_logs:
+  - auth
+  - docker
+  - error
+  - syslog
+
+# OPTIONAL SLACK SWATCH VARS
+# swatch_slack_channel:
+# swatch_slack_username:
+# swatch_slack_error_text:
+# swatch_slack_icon:
+# swatch_slack_webhook_url:
