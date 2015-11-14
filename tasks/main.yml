@@ -48,10 +48,18 @@
     tags:
       - swatch
 
+  - name: remove extraneous conf files
+    file:
+      path: "/etc/swatch/{{ item }}"
+      state: absent
+    with_items: swatch_conf_remove
+    tags:
+      - swatch
+
   - name: add the swatch conf files
     template:
       src="{{ item }}.conf.j2"
-      dest="/etc/swatch/{{ item }}.log.conf"
+      dest="/etc/swatch/{{ item }}.conf"
       owner=root
       group=root
       mode=0700

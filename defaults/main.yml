@@ -2,10 +2,13 @@
 
 swatch_email_to: false
 swatch_logs:
-  - auth
-  - docker
-  - error
+  - auth.log
+  - docker.log
+  - error.log
   - syslog
+
+swatch_conf_remove:
+  - syslog.log.conf
 
 # OPTIONAL SLACK SWATCH VARS
 # swatch_slack_channel:
