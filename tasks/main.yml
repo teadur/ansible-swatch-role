@@ -51,7 +51,7 @@
   - name: add the swatch conf files
     template:
       src="{{ item }}.conf.j2"
-      dest="{{ item }}.log.conf"
+      dest="/etc/swatch/{{ item }}.log.conf"
       owner=root
       group=root
       mode=0700
