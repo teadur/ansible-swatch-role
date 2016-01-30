@@ -1,7 +1,7 @@
 Ansible Swatch Role
 =========
 
-An Ansible role to install Swatch: The Simple Log Watcher with a handy Slack integration
+An Ansible role to install Swatch: The Simple Log Watcher with a handy Slack integration & monit files
 
 Requirements
 ------------
@@ -19,10 +19,6 @@ This role is designed to watch 4 different log files (by default).
 /var/log/auth.log
 /var/log/apache/error.log
 ```
-
-Those logs are used by templates/swatchd.j2 where `LOGS="{{ swatch_logs|join(' ') }}"` set up the startup script to watch logs in or below /var/log.
-
-You can override the default logs by setting the `swatch_logs` variable. Additionally new logs can be swatched by adding it to `swatch_logs` and by adding a template in the `templates` directory.
 
 You'll also need to set {{ swatch_email_to }} somewhere to have email delivered.
 
@@ -49,6 +45,15 @@ curl -X POST --data-urlencode 'payload={"channel": "{{ swatch_slack_channel }}",
 ```
 
 That shell script ends up in `/usr/local/bin/slack-swatch.sh`
+
+You'll also want to add the var picked up to make all the files:
+
+```
+monit_swatch:
+   - syslog
+   - auth.log
+   - docker.log
+```
 
 Example Playbook
 ----------------
