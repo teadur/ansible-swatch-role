@@ -1,5 +1,19 @@
 ---
 # A simple role to install SWATCH log watcher
+# This also gets rid of the previous files
+# from the previous version of the role
+
+  - name: Install all those dependencies
+    apt: pkg={{item}} state=present
+    with_items:
+      - libbit-vector-perl
+      - libcarp-clan-perl
+      - libdate-calc-perl
+      - libdate-calc-xs-perl
+      - libfile-tail-perl
+      - swatch
+    tags:
+      - swatch
 
   - name: Just make sure swatch is not already running
     command: /usr/bin/pkill -9 swatch
