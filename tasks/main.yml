@@ -1,20 +1,16 @@
 ---
 # A simple role to install SWATCH log watcher
 
-#  - name: Update APT package cache
-#    action: apt update_cache=yes
-#    tags:
-#      - swatch
-
-  - name: Install all those dependencies
-    apt: pkg={{item}} state=present
-    with_items:
-      - libbit-vector-perl
-      - libcarp-clan-perl
-      - libdate-calc-perl
-      - libdate-calc-xs-perl
-      - libfile-tail-perl
+  - name: Just make sure swatch is not already running
+    command: /usr/bin/pkill -9 swatch
+    ignore_errors: True
+    tags:
       - swatch
+
+  - name: Just blow out the old conf dir
+    file:
+      path=/etc/swatch
+      state=absent
     tags:
       - swatch
 
@@ -27,13 +23,21 @@
     tags:
       - swatch
 
+  - name: Blow out the old init script
+    file:
+      path=/etc/init.d/swatchd
+      state=absent
+    tags:
+      - swatch
+
   - name: add the swatch init script
     template:
-      src=swatchd.j2
-      dest=/etc/init.d/swatchd
+      src={{ item }}.init.j2
+      dest=/etc/init.d/swatch_{{ item }}
       owner=root
       group=root
       mode=0755
+    with_items: monit_swatch
     tags:
       - swatch
 
@@ -48,14 +52,6 @@
     tags:
       - swatch
 
-  - name: remove extraneous conf files
-    file:
-      path: "/etc/swatch/{{ item }}"
-      state: absent
-    with_items: swatch_conf_remove
-    tags:
-      - swatch
-
   - name: add the swatch conf files
     template:
       src="{{ item }}.conf.j2"
@@ -63,16 +59,17 @@
       owner=root
       group=root
       mode=0700
-    with_items: swatch_logs
+    with_items: monit_swatch
     tags:
       - swatch
 
   - name: stop swatch if it's already there
     service:
-      name=swatchd
+      name=swatch_{{ item }}
       state=stopped
     tags:
       - swatch
+    with_items: monit_swatch
     ignore_errors: True
 
   - name: Just make sure swatch is not already running
@@ -83,8 +80,10 @@
 
   - name: Now start swatch
     service:
-      name=swatchd
+      name=swatch_{{ item }}
       enabled=yes
       state=started
+    with_items: monit_swatch
     tags:
       - swatch
+
