@@ -77,6 +77,17 @@
     tags:
       - swatch
 
+  - name: add the Monit swatch conf files
+    template:
+      src="{{ item }}.monit.j2"
+      dest="/etc/monit/conf.d/{{ item }}.conf"
+      owner=root
+      group=root
+      mode=0700
+    with_items: monit_swatch
+    tags:
+      - swatch
+
   - name: stop swatch if it's already there
     service:
       name=swatch_{{ item }}
