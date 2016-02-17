@@ -1,10 +1,8 @@
 ---
 # A simple role to install SWATCH log watcher
-
-#  - name: Update APT package cache
-#    action: apt update_cache=yes
-#    tags:
-#      - swatch
+# This also gets rid of the previous files
+# from the previous version of the role
+# with the tag cleanup
 
   - name: Install all those dependencies
     apt: pkg={{item}} state=present
@@ -18,6 +16,19 @@
     tags:
       - swatch
 
+  - name: Just make sure swatch is not already running
+    command: /usr/bin/pkill -9 swatch
+    ignore_errors: True
+    tags:
+      - swatch
+
+  - name: Just blow out the old conf dir
+    file:
+      path=/etc/swatch
+      state=absent
+    tags:
+      - cleanup
+
   - name: make sure that swatch conf dir is there
     file:
       path=/etc/swatch
@@ -27,13 +38,21 @@
     tags:
       - swatch
 
+  - name: Blow out the old init script
+    file:
+      path=/etc/init.d/swatchd
+      state=absent
+    tags:
+      - cleanup
+
   - name: add the swatch init script
     template:
-      src=swatchd.j2
-      dest=/etc/init.d/swatchd
+      src={{ item }}.init.j2
+      dest=/etc/init.d/swatch_{{ item }}
       owner=root
       group=root
       mode=0755
+    with_items: monit_swatch
     tags:
       - swatch
 
@@ -46,15 +65,7 @@
       mode=0755
     when: swatch_slack_channel is defined and swatch_slack_username is defined
     tags:
-      - swatch
-
-  - name: remove extraneous conf files
-    file:
-      path: "/etc/swatch/{{ item }}"
-      state: absent
-    with_items: swatch_conf_remove
-    tags:
-      - swatch
+      - slack
 
   - name: add the swatch conf files
     template:
@@ -62,17 +73,29 @@
       dest="/etc/swatch/{{ item }}.conf"
       owner=root
       group=root
-      mode=0700
-    with_items: swatch_logs
+      mode=0644
+    with_items: monit_swatch
     tags:
       - swatch
 
+  - name: add the Monit swatch conf files
+    template:
+      src="{{ item }}.monit.j2"
+      dest="/etc/monit/conf.d/{{ item }}.conf"
+      owner=root
+      group=root
+      mode=0700
+    with_items: monit_swatch
+    tags:
+      - monit
+
   - name: stop swatch if it's already there
     service:
-      name=swatchd
+      name=swatch_{{ item }}
       state=stopped
     tags:
       - swatch
+    with_items: monit_swatch
     ignore_errors: True
 
   - name: Just make sure swatch is not already running
@@ -83,8 +106,9 @@
 
   - name: Now start swatch
     service:
-      name=swatchd
+      name=swatch_{{ item }}
       enabled=yes
       state=started
+    with_items: monit_swatch
     tags:
       - swatch
