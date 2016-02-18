@@ -2,7 +2,8 @@
 # A simple role to install SWATCH log watcher
 # This also gets rid of the previous files
 # from the previous version of the role
-# with the tag cleanup
+# with the tag cleanup. Plan is run once
+# then remove that code. Tagged: cleanup
 
   - name: Install all those dependencies
     apt: pkg={{item}} state=present
@@ -29,6 +30,13 @@
     tags:
       - cleanup
 
+  - name: Blow out the old init script
+    file:
+      path=/etc/init.d/swatchd
+      state=absent
+    tags:
+      - cleanup
+
   - name: make sure that swatch conf dir is there
     file:
       path=/etc/swatch
@@ -37,13 +45,6 @@
       group=root
     tags:
       - swatch
-
-  - name: Blow out the old init script
-    file:
-      path=/etc/init.d/swatchd
-      state=absent
-    tags:
-      - cleanup
 
   - name: add the swatch init script
     template:
