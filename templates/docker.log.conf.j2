@@ -1,18 +1,10 @@
 perlcode my ($month, $day, $time, $host_name, @message) = split(/\s+/);
 
 watchfor /exited/
-        exec echo "Subject:SWATCH Found An Exited Container On $host_name\n\n$_\n" | sendmail "{{ swatch_email_to }}"
+        exec echo "Subject:SWATCH Found An Exited Container On $host_name\n\n$_\n" | sendmail "False"
 
-ignore /404/
-watchfor /ERROR|error/
-        exec echo "Subject:SWATCH Found A Docker Log Error On $host_name\n\n$_\n" | sendmail "{{ swatch_email_to }}"
-	limit track_by=message, type=limit, count=2, seconds=240
-
-watchfor /OutOfMemoryError/
-        exec echo "Subject:SWATCH Found Docker OutOfMemoryErrors on $host_name\n\n$_\n" | sendmail "{{ swatch_email_to }}"
-	limit track_by=message, type=limit, count=2, seconds=240
+ignore /404|Rendered/
 
 watchfor /error|ERROR/
-       	exec /usr/local/bin/slack-swatch.sh '$_'
-	limit track_by=message, type=limit, count=2, seconds=240
-
+        exec /usr/local/bin/slack-swatch.sh '$_'
+        threshold track_by=message, type=limit, count=2, seconds=240
