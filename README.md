@@ -46,7 +46,7 @@ Those vars can be used to build a shell script like this:
 ```
 #!/bin/bash
 ERROR=$1
-curl -X POST --data-urlencode 'payload={"channel": "{{ swatch_slack_channel }}", "username": "{{ swatch_slack_username }}", "text": "{{ swatch_slack_error_text }}", "icon_emoji": "{{ swatch_slack_icon }}"}' \
+curl -X POST --data-urlencode 'payload={"channel": "swatch", "username": "swatchbot", "text": " Swatch error from : _'$HOSTNAME'_ : `'"'$ERROR'"'` ", "icon_emoji": "':$ICON:'"}'
  {{ swatch_slack_webhook_url }}
 
 ```
