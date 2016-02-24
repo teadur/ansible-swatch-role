@@ -33,7 +33,11 @@ slack_swatch_username: "swatchbot"
 slack_swatch_error_text: " Swatch error from : _'$HOSTNAME'_ : `\'\"\'$ERROR\'\"\'` "
 slack_swatch_icon: ":bangbang:" 
 slack_swatch_webhook_url: "https://hooks.slack.com/services/ef2wqft/efw2e4/whateverelseitlookslikehere"
-monit_swatch:
+swatch_inits:
+   - syslog
+   - auth.log
+   - docker.log
+swatch_confs:
    - syslog
    - auth.log
    - docker.log
@@ -56,7 +60,11 @@ That shell script ends up in `/usr/local/bin/slack-swatch.sh`
 You'll also want to add the vars picked up to make all the files:
 
 ```
-monit_swatch:
+swatch_inits:
+   - syslog
+   - auth.log
+   - docker.log
+swatch_confs:
    - syslog
    - auth.log
    - docker.log
@@ -84,4 +92,4 @@ Then run it something like:
 Author Information
 ------------------
 
-- Blake Carver
+- LYRASIS
