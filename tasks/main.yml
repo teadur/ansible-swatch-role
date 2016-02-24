@@ -86,7 +86,7 @@
       owner=root
       group=root
       mode=0700
-    with_items: monit_swatch
+    with_items: swatch_monits
     tags:
       - monit
 
@@ -110,6 +110,6 @@
       name=swatch_{{ item }}
       enabled=yes
       state=started
-    with_items: monit_swatch
+    with_items: swatch_inits
     tags:
       - swatch
