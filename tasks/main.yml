@@ -46,14 +46,14 @@
     tags:
       - swatch
 
-  - name: add the swatch init script
+  - name: add the swatch init scripts
     template:
       src={{ item }}.init.j2
       dest=/etc/init.d/swatch_{{ item }}
       owner=root
       group=root
       mode=0755
-    with_items: monit_swatch
+    with_items: swatch_inits
     tags:
       - swatch
 
@@ -75,7 +75,7 @@
       owner=root
       group=root
       mode=0644
-    with_items: monit_swatch
+    with_items: swatch_confs
     tags:
       - swatch
 
