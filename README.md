@@ -33,11 +33,7 @@ slack_swatch_username: "swatchbot"
 slack_swatch_error_text: " Swatch error from : _'$HOSTNAME'_ : `\'\"\'$ERROR\'\"\'` "
 slack_swatch_icon: ":bangbang:" 
 slack_swatch_webhook_url: "https://hooks.slack.com/services/ef2wqft/efw2e4/whateverelseitlookslikehere"
-swatch_inits:
-   - syslog
-   - auth.log
-   - docker.log
-swatch_confs:
+swatch_inits & swatch_confs & swatch_monits
    - syslog
    - auth.log
    - docker.log
@@ -57,14 +53,9 @@ curl -X POST --data-urlencode 'payload={"channel": "{{ swatch_slack_channel }}",
 
 That shell script ends up in `/usr/local/bin/slack-swatch.sh`
 
-You'll also want to add the vars picked up to make all the files:
-
+All the files are created from the `swatch_` vars:
 ```
-swatch_inits:
-   - syslog
-   - auth.log
-   - docker.log
-swatch_confs:
+swatch_inits  & swatch_confs & swatch_monits
    - syslog
    - auth.log
    - docker.log
