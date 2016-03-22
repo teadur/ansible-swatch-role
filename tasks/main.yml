@@ -1,9 +1,5 @@
 ---
 # A simple role to install SWATCH log watcher
-# This also gets rid of the previous files
-# from the previous version of the role
-# with the tag cleanup. Plan is run once
-# then remove that code. Tagged: cleanup
 
   - name: Install all those dependencies
     apt: pkg={{item}} state=present
@@ -17,27 +13,27 @@
     tags:
       - swatch
 
-  - name: Just make sure swatch is not already running
+  - name: Swatch | Stop any running swatch instances
     command: /usr/bin/pkill -9 swatch
     ignore_errors: True
     tags:
       - swatch
 
-  - name: Just blow out the old conf dir
+  - name: Swatch | Remove swatch conf files in etc
     file:
       path=/etc/swatch
       state=absent
     tags:
       - cleanup
 
-  - name: Blow out the old init script
+  - name: Swatch | Remove swatchd init script if it exsists
     file:
       path=/etc/init.d/swatchd
       state=absent
     tags:
       - cleanup
 
-  - name: make sure that swatch conf dir is there
+  - name: Swatch | Create /etc/swatch directory
     file:
       path=/etc/swatch
       state=directory
@@ -46,7 +42,7 @@
     tags:
       - swatch
 
-  - name: add the swatch init scripts
+  - name: Swatch | Create new swatch init scripts
     template:
       src={{ item }}.init.j2
       dest=/etc/init.d/swatch_{{ item }}
@@ -57,7 +53,7 @@
     tags:
       - swatch
 
-  - name: add in the slack swatch integration shell script
+  - name: Swatch | Create slack swatch integration shell script
     template:
       src=slack-swatch.sh.j2
       dest=/usr/local/bin/slack-swatch.sh
@@ -68,7 +64,7 @@
     tags:
       - slack
 
-  - name: add the swatch conf files
+  - name: Swatch | Create swatch conf files
     template:
       src="{{ item }}.conf.j2"
       dest="/etc/swatch/{{ item }}.conf"
@@ -79,7 +75,7 @@
     tags:
       - swatch
 
-  - name: add the Monit swatch conf files
+  - name: Swatch | Create the Monit swatch conf files
     template:
       src="{{ item }}.monit.j2"
       dest="/etc/monit/conf.d/{{ item }}.conf"
@@ -90,7 +86,7 @@
     tags:
       - monit
 
-  - name: stop swatch if it's already there
+  - name: Swatch | Stop swatch if running
     service:
       name=swatch_{{ item }}
       state=stopped
@@ -99,13 +95,13 @@
     with_items: monit_swatch
     ignore_errors: True
 
-  - name: Just make sure swatch is not already running
+  - name: Swatch | Double chec swatch is not already running
     command: /usr/bin/pkill -9 swatch
     ignore_errors: True
     tags:
       - swatch
 
-  - name: Now start swatch
+  - name: Swatch | start new swatch scripts
     service:
       name=swatch_{{ item }}
       enabled=yes
