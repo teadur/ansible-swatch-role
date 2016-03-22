@@ -1,0 +1,5 @@
+check process swatch.syslog.log with pidfile /var/run/swatch-syslog.pid
+  start program = "/etc/init.d/swatch_syslog start"
+  stop program  = "/etc/init.d/swatch_syslog stop"
+  if 5 restarts within 5 cycles then alert
+

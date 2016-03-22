@@ -1,0 +1,5 @@
+check process swatch.docker.log with pidfile /var/run/swatch-docker.pid
+  start program = "/etc/init.d/swatch_docker.log start"
+  stop program  = "/etc/init.d/swatch_docker.log stop"
+  if 5 restarts within 5 cycles then alert
+
