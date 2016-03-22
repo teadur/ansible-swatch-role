@@ -1,12 +1,18 @@
 perlcode my ($month, $day, $time, $host_name, @message) = split(/\s+/);
 
 watchfor /EXT4-fs warning/
-        exec echo "Subject:SWATCH Found Disk Errors on $host_name\n\n$_\n" | sendmail "{{ swatch_email_to }}"
+       exec /usr/local/bin/slack-swatch.sh '$_' bangbang
+
 watchfor /e2fsck/
-        exec echo "Subject:SWATCH Found Disk Errors on $host_name\n\n$_\n" | sendmail "{{ swatch_email_to }}"
+       exec /usr/local/bin/slack-swatch.sh '$_' bangbang
+
 watchfor /mounting fs with errors/
-        exec echo "Subject:SWATCH Found Disk Errors on $host_name\n\n$_\n" | sendmail "{{ swatch_email_to }}"
+       exec /usr/local/bin/slack-swatch.sh '$_' bangbang
+
 watchfor /Buffer I\/O error/
-        exec echo "Subject:SWATCH Found Disk Errors on $host_name\n\n$_\n" | sendmail "{{ swatch_email_to }}"
+       exec /usr/local/bin/slack-swatch.sh '$_' bangbang
+
+ignore=/postfix\/smtpd/
+
 watchfor /error|ERROR/
        exec /usr/local/bin/slack-swatch.sh '$_' bangbang
