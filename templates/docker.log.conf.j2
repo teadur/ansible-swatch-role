@@ -5,13 +5,36 @@ watchfor /exited/
 
 ignore /404/
 
-watchfor /Rendered/
+watchfor /checkErrorPacket/
        	exec /usr/local/bin/slack-swatch.sh '$_' bug
 	threshold track_by=routing_error.erb, type=limit, count=1, seconds=10800
 
-watchfor /\^(?!Rendered\b).*\b(?i:error)\b/
-       	exec /usr/local/bin/slack-swatch.sh '$_' bangbang
+watchfor /SQLError/
+       	exec /usr/local/bin/slack-swatch.sh '$_' bug
+	threshold track_by=routing_error.erb, type=limit, count=1, seconds=10800
+
+watchfor /locking error/
+       	exec /usr/local/bin/slack-swatch.sh '$_' bug
+	threshold track_by=routing_error.erb, type=limit, count=1, seconds=10800
+
+watchfor /RuntimeError/
+       	exec /usr/local/bin/slack-swatch.sh '$_' bug
 	threshold track_by=routing_error.erb, type=limit, count=1, seconds=10800
 
 
+watchfor /ERROR/
+       	exec /usr/local/bin/slack-swatch.sh '$_' bangbang
+	threshold track_by=routing_error.erb, type=limit, count=1, seconds=1080
+
+watchfor /Internal Server Error/
+       	exec /usr/local/bin/slack-swatch.sh '$_' bangbang
+	threshold track_by=routing_error.erb, type=limit, count=1, seconds=1080
+
+watchfor /Connection timed out/
+       	exec /usr/local/bin/slack-swatch.sh '$_' bangbang
+	threshold track_by=routing_error.erb, type=limit, count=1, seconds=1080
+
+watchfor /exited/
+       	exec /usr/local/bin/slack-swatch.sh '$_' bangbang
+	threshold track_by=routing_error.erb, type=limit, count=1, seconds=1080
 
