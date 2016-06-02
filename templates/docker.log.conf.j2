@@ -45,3 +45,11 @@ watchfor /Java heap space/
        	exec /usr/local/bin/slack-swatch.sh '$_' bangbang
 	threshold track_by=routing_error.erb, type=limit, count=1, seconds=1080
 
+watchfor /Internal Server Error/
+       	exec /usr/local/bin/slack-swatch.sh '$_' bangbang
+	threshold track_by=routing_error.erb, type=limit, count=1, seconds=1080
+
+watchfor /ErrorApp/
+       	exec /usr/local/bin/slack-swatch.sh '$_' bangbang
+	threshold track_by=routing_error.erb, type=limit, count=1, seconds=1080
+
