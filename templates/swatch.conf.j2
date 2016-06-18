@@ -1,0 +1,8 @@
+perlcode my ($month, $day, $time, $host_name, @message) = split(/\s+/);
+
+{% for config in swatch_files %}
+	{% for watch_for in config.watch_for %}
+watchfor /{{ watch_for.string }}/
+	{{ watch_for.action }}
+	{% endfor %}
+{% endfor %}
