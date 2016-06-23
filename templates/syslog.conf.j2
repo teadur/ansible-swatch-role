@@ -1,5 +1,8 @@
 perlcode my ($month, $day, $time, $host_name, @message) = split(/\s+/);
 
+watchfor /BLAKE/
+  exec echo "Subject: SWATCH ERROR On {{ ansible_hostname }} $_ \n\n$_\n" | sendmail "blake.carver@lyrasis.org"
+
 watchfor /EXT4-fs warning/
        exec /usr/local/bin/slack-swatch.sh '$_' bangbang
 
