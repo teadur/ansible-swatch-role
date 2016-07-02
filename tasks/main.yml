@@ -54,7 +54,7 @@
     group: root
     mode: 0755
   with_items: swatch_files
-  when: "{{ item.tail }}"
+  when: "{{ item.tail is defined}}"
   tags:
     - swatch
 
@@ -76,7 +76,7 @@
     owner: root
     group: root
     mode: 0644
-  with_items: swatch_files
+  with_items: "{{ swatch_files }}"
   tags:
     - swatch
 
@@ -100,7 +100,7 @@
   with_items: swatch_files
   ignore_errors: True
 
-- name: Swatch | Double chec swatch is not already running
+- name: Swatch | Double check swatch is not already running
   command: /usr/bin/pkill -9 swatch
   ignore_errors: True
   tags:
