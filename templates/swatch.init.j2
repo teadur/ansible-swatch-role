@@ -2,7 +2,7 @@
 
 start()
 {
-/usr/bin/swatch --config-file=/etc/swatch/{{ item.name }}.log.conf --tail-file={{ item.tail }} --pid-file=/var/run/swatch-{{ item.name }}log.pid --daemon > /dev/null >&1
+/usr/bin/swatch --config-file=/etc/swatch/{{ item.name }}.conf --tail-file={{ item.tail }} --pid-file=/var/run/swatch-{{ item.name }}.pid --daemon > /dev/null >&1
 }
 
 stop()
