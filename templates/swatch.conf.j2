@@ -1,8 +1,19 @@
 perlcode my ($month, $day, $time, $host_name, @message) = split(/\s+/);
 
-{% for config in swatch_files %}
-	{% for watch_for in config.watch_for %}
-watchfor /{{ watch_for.string }}/
-	{{ watch_for.action }}
-	{% endfor %}
+{% for abc in item.watchfor %}
+watchfor /{{ abc.email_string }}/
+	{{ abc.email_action }}
+    {% if abc.email_threshold %}
+        {{ abc.email_threshold }}
+    {% endif %}
+    {% if abc.slack_string %}
+continue
+        {{ abc.slack_string }}
+    {% endif %}
+    {% if abc.slack_action %}
+        {{ abc.slack_action }}
+    {% endif %}
+    {% if abc.slack_threshold %}
+        {{ abc.slack_threshold }}
+    {% endif %}
 {% endfor %}
