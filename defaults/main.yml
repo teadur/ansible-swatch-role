@@ -1,50 +1,19 @@
 ---
 
-swatch_email_to: false
-
-# DEPRECATED
-# swatch_logs:
-#   - auth.log
-#   - docker.log
-#   - error.log
-#   - syslog
+swatch_email_to: "none@example.com"
 
 swatch_conf_remove:
   - syslog.log.conf
 
 swatch_files:
   -
-    name: 'auth'
-    tail: '/var/log/auth.log'
-    watch_for:
-      -
-        string: "FAILED su for root"
-        action: "exec echo \"Subject:FAILED su for root on $host_name\n\n$_\n\" | sendmail {{ swatch_email_to }}"
-  -
-    name: 'docker'
-    tail: '/var/log/docker.log'
-    watch_for:
-      -
-        string: "exited"
-        action: "exec echo \"Subject:SWATCH Found An Exited Container On $host_name\n\n$_\n\" | sendmail \"False\""
-  -
-    name: 'error'
-    tail: false
-    watch_for:
-      -
-        string: "Segmentation"
-        action: "exec echo \"Subject:SWATCH Found Apache Segmentation Fault on $host_name\n\n$_\n\" | sendmail \"{{ swatch_email_to }}\""
-  -
     name: 'syslog'
     tail: '/var/log/syslog'
-    watch_for:
+    watchfor:
       -
-        string: "EXT4-fs warning"
-        action: "exec /usr/local/bin/slack-swatch.sh '$_' bangbang"
-
-# OPTIONAL SLACK SWATCH VARS
-# swatch_slack_channel:
-# swatch_slack_username:
-# swatch_slack_error_text:
-# swatch_slack_icon:
-# swatch_slack_webhook_url:
+        email_string: "EXT4-fs warning"
+        email_action: "do something here"
+        email_threshold: "whatever some email thresh"
+        slack_string: "whaeves"
+        slack_action: "post this to slack"
+        slack_threshold: "whatever some slack thresh"
