@@ -2,4 +2,6 @@ perlcode my ($month, $day, $time, $host_name, @message) = split(/\s+/);
 
 watchfor /FAILED su for root/
         exec echo "Subject:FAILED su for root on $host_name\n\n$_\n" | sendmail "{{ swatch_email_to }}"
-
+continue
+watchfor /FAILED su for root/
+        exec /usr/local/bin/swatch-irker '$_' boom

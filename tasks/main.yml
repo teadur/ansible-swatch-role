@@ -64,6 +64,29 @@
     tags:
       - slack
 
+  - name: Swatch | Create irker swatch integration shell script
+    template:
+      src=irker-swatch.sh.j2
+      dest=/usr/local/bin/irker-swatch
+      owner=root
+      group=root
+      mode=0755
+    when: swatch_irker_server is defined and swatch_irker_target
+    tags:
+      - irker
+
+  - name: Swatch | Create irker sender script
+    template:
+      src=irker-swatch.py.j2
+      dest=/usr/local/bin/irk
+      owner=root
+      group=root
+      mode=0755
+    when: swatch_irker_server is defined and swatch_irker_target
+    tags:
+      - irker
+
+
   - name: Swatch | Create swatch conf files
     template:
       src="{{ item }}.conf.j2"
