@@ -1,5 +1,15 @@
 #!/bin/bash
 
+### BEGIN INIT INFO
+# Provides:             swatch_syslog
+# Required-Start:       $remote_fs $syslog
+# Required-Stop:        $remote_fs $syslog
+# Default-Start:        2 3 4 5
+# Default-Stop:         
+# Short-Description:    Swatch syslog
+### END INIT INFO
+
+
 start()
 {
 /usr/bin/swatch --config-file=/etc/swatch/syslog.conf --tail-file=/var/log/syslog --pid-file=/var/run/swatch-syslog.pid --daemon > /dev/null >&1

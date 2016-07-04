@@ -1,5 +1,15 @@
 #!/bin/bash
 
+### BEGIN INIT INFO
+# Provides:             swatch_auth
+# Required-Start:       $remote_fs $syslog
+# Required-Stop:        $remote_fs $syslog
+# Default-Start:        2 3 4 5
+# Default-Stop:         
+# Short-Description:    Swatch auth log
+### END INIT INFO
+
+
 start()
 {
 /usr/bin/swatch --config-file=/etc/swatch/auth.log.conf --tail-file=/var/log/auth.log --pid-file=/var/run/swatch-authlog.pid --daemon > /dev/null >&1
