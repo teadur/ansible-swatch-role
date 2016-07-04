@@ -3,24 +3,31 @@ perlcode my ($month, $day, $time, $host_name, @message) = split(/\s+/);
 ignore /404/
 
 watchfor /exited/
-        exec echo "Subject: OMG SWATCH Found An Exited Container On {{ ansible_hostname }}\n\n$_\n" | sendmail "blake.carver@lyrasis.org"
+        exec echo "Subject: OMG SWATCH Found An Exited Container On {{ ansible_hostname }}\n\n$_\n" | sendmail "servers@lyrasistechnology.org"
 continue
 watchfor /exited/
         exec /usr/local/bin/slack-swatch.sh '$_' boom
 
 watchfor /checkErrorPacket/
-        exec echo "Subject: SWATCH Error Found  {{ ansible_hostname }}\n\n$_\n" | sendmail "blake.carver@lyrasis.org"
+        exec echo "Subject: SWATCH Error Found  {{ ansible_hostname }}\n\n$_\n" | sendmail "servers@lyrasistechnology.org"
 continue
 watchfor /checkErrorPacket/
        	exec /usr/local/bin/slack-swatch.sh '$_' bug
 	threshold track_by=routing_error.erb, type=limit, count=1, seconds=10800
 
 watchfor /SQLError/
-        exec echo "Subject: SWATCH Error Found On {{ ansible_hostname }}\n\n$_\n" | sendmail "blake.carver@lyrasis.org"
+        exec echo "Subject: SWATCH Error Found On {{ ansible_hostname }}\n\n$_\n" | sendmail "servers@lyrasistechnology.org"
 continue
 watchfor /SQLError/
        	exec /usr/local/bin/slack-swatch.sh '$_' bug
 	threshold track_by=routing_error.erb, type=limit, count=1, seconds=10800
+
+watchfor /ERROR/
+       	exec /usr/local/bin/slack-swatch.sh '$_' bangbang
+	threshold track_by=routing_error.erb, type=limit, count=1, seconds=1080
+continue
+watchfor /ERROR/
+        exec echo "Subject: SWATCH Error Found On {{ ansible_hostname }}\n\n$_\n" | sendmail "servers@lyrasistechnology.org"
 
 watchfor /locking error/
        	exec /usr/local/bin/slack-swatch.sh '$_' bug
@@ -30,9 +37,6 @@ watchfor /RuntimeError/
        	exec /usr/local/bin/slack-swatch.sh '$_' bug
 	threshold track_by=routing_error.erb, type=limit, count=1, seconds=10800
 
-watchfor /ERROR/
-       	exec /usr/local/bin/slack-swatch.sh '$_' bangbang
-	threshold track_by=routing_error.erb, type=limit, count=1, seconds=1080
 
 watchfor /Exception/
        	exec /usr/local/bin/slack-swatch.sh '$_' bangbang
