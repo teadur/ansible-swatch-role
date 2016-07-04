@@ -1,6 +1,7 @@
 ---
 
 swatch_email_to: false
+swatch_monit: true
 swatch_logs:
   - auth.log
   - docker.log
