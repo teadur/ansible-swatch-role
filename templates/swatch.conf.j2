@@ -1,11 +1,9 @@
 perlcode my ($month, $day, $time, $host_name, @message) = split(/\s+/);
 
-{% for string in item.string %}
-
-        watchfor /{{ string }}/
-
-{% for action in item.actions %}
-	{{ action }}
+{% for watchfor in item.watchfor %}
+   watchfor /{{ watchfor.string }}/
+{% for actions in watchfor.actions %}
+	Action: {{ actions.action }}
+	Threshold: {{ actions.threshold }}
 {% endfor %}
-
 {% endfor %}

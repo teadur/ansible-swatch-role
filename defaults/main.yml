@@ -8,11 +8,24 @@ swatch_conf_remove:
 swatch_files:
   - name: 'syslog'
     tail: '/var/log/syslog'
-    string: 'EXT4-fs warning'
-    actions:
-      - "Slack blah blah action"
-      - "Irker blah blah action"
-    string: 'e2fsck'
-    actions:
-     - "SLACK blah blah action"
-     - "IRKER blah blah action"
+    watchfor:
+      -
+        string: 'Stupid FIrst String'
+        actions:
+          -
+            action: "1/2 Slack blah blah action"
+            threshold: "Threshold For This first Action"
+        actions:
+          -
+            action: "2/2 Slack blah blah action"
+            threshold: "Threshold For This second Action"
+      -
+        string: 'Crappy Second String'
+        actions:
+          -
+            action: "1/2 Slack blah blah action"
+            threshold: "Threshold For This 1 Action"
+        actions:
+          -
+            action: "2/2 Slack blah blah action"
+            threshold: "Threshold For This 2 Action"
