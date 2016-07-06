@@ -1,19 +1,11 @@
 perlcode my ($month, $day, $time, $host_name, @message) = split(/\s+/);
 
-{% for abc in item.watchfor %}
-watchfor /{{ abc.email_string }}/
-	{{ abc.email_action }}
-    {% if abc.email_threshold %}
-        {{ abc.email_threshold }}
-    {% endif %}
-    {% if abc.slack_string %}
-continue
-        {{ abc.slack_string }}
-    {% endif %}
-    {% if abc.slack_action %}
-        {{ abc.slack_action }}
-    {% endif %}
-    {% if abc.slack_threshold %}
-        {{ abc.slack_threshold }}
-    {% endif %}
+{% for string in item.string %}
+
+        watchfor /{{ string }}/
+
+{% for action in item.actions %}
+	{{ action }}
+{% endfor %}
+
 {% endfor %}

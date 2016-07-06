@@ -6,14 +6,13 @@ swatch_conf_remove:
   - syslog.log.conf
 
 swatch_files:
-  -
-    name: 'syslog'
+  - name: 'syslog'
     tail: '/var/log/syslog'
-    watchfor:
-      -
-        email_string: "EXT4-fs warning"
-        email_action: "do something here"
-        email_threshold: "whatever some email thresh"
-        slack_string: "whaeves"
-        slack_action: "post this to slack"
-        slack_threshold: "whatever some slack thresh"
+    string: 'EXT4-fs warning'
+    actions:
+      - "Slack blah blah action"
+      - "Irker blah blah action"
+    string: 'e2fsck'
+    actions:
+     - "SLACK blah blah action"
+     - "IRKER blah blah action"
