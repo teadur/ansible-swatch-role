@@ -1,9 +1,14 @@
 perlcode my ($month, $day, $time, $host_name, @message) = split(/\s+/);
 
+ignore/{{ item.toignore }}/
+
 {% for watchfor in item.watchfor %}
-   watchfor /{{ watchfor.string }}/
+watchfor /{{ watchfor.string }}/
 {% for actions in watchfor.actions %}
-	Action: {{ actions.action }}
-	Threshold: {{ actions.threshold }}
+	{{ actions.action }}
+	{{ actions.threshold }}
 {% endfor %}
+{% if not loop.last %}continue{% endif %}
+
 {% endfor %}
+
