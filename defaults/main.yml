@@ -1,49 +1,39 @@
 ---
 
-swatch_email_to: "none@example.com"
+#swatch_email_to: "none@example.com"
 
-swatch_conf_remove:
-  - syslog.log.conf
+#swatch_conf_remove:
+#  - somelog
 
-swatch_files:
-  - name: 'docker'
-    tail: '/var/log/docker.log'
-    toignore: '404a'
-    watchfor:
-      -
-        string: 'exited'
-        actions:
-          - action: 'exec echo "Subject: OMG SWATCH Found An Exited Container On {{ ansible_hostname }}\n\n$_\n" | sendmail \"{{ swatch_email_to }}\"'
-            threshold: "threshold track_by=exited, type=limit, count=1, seconds=10800"
-      -
-        string: 'checkErrorPacket'
-        actions:
-          - action: 'exec echo "Subject: SWATCH Found An Error On {{ ansible_hostname }}\n\n$_\n" | sendmail \"{{ swatch_email_to }}\"'
-            threshold: "threshold track_by=checkErrorPacket, type=limit, count=1, seconds=10800"
-          - action: "exec /usr/local/bin/slack-swatch.sh \\'$_\\' bug"
-            threshold: "threshold track_by=checkErrorPacket, type=limit, count=1, seconds=10800"
-      -
-        string: 'SQLError'
-        actions:
-          - action: 'exec echo "Subject: SWATCH Found An Error On {{ ansible_hostname }}\n\n$_\n" | sendmail \"{{ swatch_email_to }}\"'
-            threshold: "threshold track_by=SQLError, type=limit, count=1, seconds=10800"
-          - action: "exec /usr/local/bin/slack-swatch.sh '$_' bug"
-            threshold: "threshold track_by=SQLError, type=limit, count=1, seconds=10800"
-  - name: 'syslog'
-    tail: '/var/log/syslog'
-    toignore: 'blakeo'
-    watchfor:
-      -
-        string: 'EXT4-fs warning'
-        actions:
-          - action: 'exec echo "Subject: SWATCH Found An Error On {{ ansible_hostname }}\n\n$_\n" | sendmail \"{{ swatch_email_to }}\"'
-            threshold: "threshold track_by=EXT4-fs warning, type=limit, count=1, seconds=10800"
-          - action: "exec /usr/local/bin/slack-swatch.sh \\'$_\\' bangbang"
-            threshold: "threshold track_by=EXT4-fs warning, type=limit, count=1, seconds=10800"
-      -
-        string: 'e2fsck'
-        actions:
-          - action: 'exec echo "Subject: SWATCH Found An Error On {{ ansible_hostname }}\n\n$_\n" | sendmail \"{{ swatch_email_to }}\"'
-            threshold: "threshold track_by=e2fsck, type=limit, count=1, seconds=10800"
-          - action: "exec /usr/local/bin/slack-swatch.sh \\'$_\\' bug"
-            threshold: "threshold track_by=e2fsck, type=limit, count=1, seconds=10800"
+# a few examples
+#swatch_files:
+#  - name: 'docker'
+#    tail: '/var/log/docker.log'
+#    toignore: '404'
+#    watchfor:
+#      -
+#        string: 'exited'
+#        actions:
+#          - action: 'exec echo "Subject: OMG SWATCH Found An Exited Container On {{ ansible_hostname }}\n\n$_\n" | sendmail "{{ swatch_email_to }}"'
+#            threshold: "threshold track_by=exited, type=limit, count=1, seconds=300"
+#          - action: "exec /usr/local/bin/slack-swatch.sh '$_' 100"
+#            threshold: "threshold track_by=checkErrorPacket, type=limit, count=1, seconds=120"
+#
+#  - name: 'syslog'
+#    tail: '/var/log/syslog'
+#    toignore: 'swatch'
+#    watchfor:
+#      -
+#        string: 'EXT4-fs warning'
+#        actions:
+#          - action: 'exec echo "Subject: SWATCH Found An Error On {{ ansible_hostname }}\n\n$_\n" | sendmail "{{ swatch_email_to }}"'
+#            threshold: "threshold track_by=checkErrorPacket, type=limit, count=1, seconds=10800"
+#          - action: "exec /usr/local/bin/slack-swatch.sh '$_' bug"
+#            threshold: "threshold track_by=EXT4-fs warning, type=limit, count=1, seconds=10800"
+#      -
+#        string: 'e2fsck'
+#        actions:
+#          - action: 'exec echo "Subject: SWATCH Found An Error On {{ ansible_hostname }}\n\n$_\n" | sendmail "{{ swatch_email_to }}"'
+#            threshold: "threshold track_by=checkErrorPacket, type=limit, count=1, seconds=10800"
+#          - action: "exec /usr/local/bin/slack-swatch.sh '$_' bug"
+#            threshold: "threshold track_by=e2fsck, type=limit, count=1, seconds=10800"
