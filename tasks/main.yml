@@ -110,6 +110,8 @@
     group=root
     mode=0700
   with_items: swatch_files
+  when: swatch_monit is true
+  ignore_errors: True
   tags:
     - monit
 
