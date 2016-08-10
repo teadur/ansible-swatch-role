@@ -53,7 +53,7 @@
     owner: root
     group: root
     mode: 0755
-  with_items: swatch_files
+  with_items: "{{ swatch_files }}"
   when: "{{ item.tail is defined}}"
   tags:
     - swatch
@@ -109,7 +109,7 @@
     owner=root
     group=root
     mode=0700
-  with_items: swatch_files
+  with_items: "{{ swatch_files }}"
   when: swatch_monit is defined
   ignore_errors: True
   tags:
@@ -121,7 +121,7 @@
     state=stopped
   tags:
     - swatch
-  with_items: swatch_files
+  with_items: "{{ swatch_files }}"
   ignore_errors: True
 
 - name: Swatch | Double check swatch is not already running
@@ -135,6 +135,6 @@
     name=swatch_{{ item.name }}
     enabled=yes
     state=started
-  with_items: swatch_files
+  with_items: "{{ swatch_files }}"
   tags:
     - swatch
