@@ -1,111 +1,140 @@
 ---
 # A simple role to install SWATCH log watcher
 
-  - name: Install all those dependencies
-    apt: pkg={{item}} state=present
-    with_items:
-      - libbit-vector-perl
-      - libcarp-clan-perl
-      - libdate-calc-perl
-      - libdate-calc-xs-perl
-      - libfile-tail-perl
-      - swatch
-    tags:
-      - swatch
+- name: Install all those dependencies
+  apt:
+    pkg: "{{ item }}"
+    state: present
+  with_items:
+    - libbit-vector-perl
+    - libcarp-clan-perl
+    - libdate-calc-perl
+    - libdate-calc-xs-perl
+    - libfile-tail-perl
+    # recommend to install and configure monit before this insurance
+    - monit
+    - swatch
+  tags:
+    - swatch
 
-  - name: Swatch | Stop any running swatch instances
-    command: /usr/bin/pkill -9 swatch
-    ignore_errors: True
-    tags:
-      - swatch
+- name: Swatch | Stop any running swatch instances
+  command: /usr/bin/pkill -9 swatch
+  ignore_errors: True
+  tags:
+    - swatch
 
-  - name: Swatch | Remove swatch conf files in etc
-    file:
-      path=/etc/swatch
-      state=absent
-    tags:
-      - cleanup
+- name: Swatch | Remove swatch conf files in etc
+  file:
+    path: /etc/swatch
+    state: absent
+  tags:
+    - cleanup
 
-  - name: Swatch | Remove swatchd init script if it exsists
-    file:
-      path=/etc/init.d/swatchd
-      state=absent
-    tags:
-      - cleanup
+- name: Swatch | Remove swatchd init script if it exists
+  file:
+    path: /etc/init.d/swatchd
+    state: absent
+  tags:
+    - cleanup
 
-  - name: Swatch | Create /etc/swatch directory
-    file:
-      path=/etc/swatch
-      state=directory
-      owner=root
-      group=root
-    tags:
-      - swatch
+- name: Swatch | Create /etc/swatch directory
+  file:
+    path: /etc/swatch
+    state: directory
+    owner: root
+    group: root
+  tags:
+    - swatch
 
-  - name: Swatch | Create new swatch init scripts
-    template:
-      src={{ item }}.init.j2
-      dest=/etc/init.d/swatch_{{ item }}
-      owner=root
-      group=root
-      mode=0755
-    with_items: swatch_inits
-    tags:
-      - swatch
+- name: Swatch | Create new swatch init scripts
+  template:
+    src: swatch.init.j2
+    dest: "/etc/init.d/swatch_{{ item.name }}"
+    owner: root
+    group: root
+    mode: 0755
+  with_items: "{{ swatch_files }}"
+  when: "{{ item.tail is defined}}"
+  tags:
+    - swatch
 
-  - name: Swatch | Create slack swatch integration shell script
-    template:
-      src=slack-swatch.sh.j2
-      dest=/usr/local/bin/slack-swatch.sh
-      owner=root
-      group=root
-      mode=0755
-    when: swatch_slack_channel is defined and swatch_slack_username is defined
-    tags:
-      - slack
+- name: Swatch | Create slack swatch integration shell script
+  template:
+    src=slack-swatch.sh.j2
+    dest=/usr/local/bin/slack-swatch.sh
+    owner=root
+    group=root
+    mode=0755
+  when: swatch_slack_channel is defined and swatch_slack_username is defined
+  tags:
+    - slack
 
-  - name: Swatch | Create swatch conf files
-    template:
-      src="{{ item }}.conf.j2"
-      dest="/etc/swatch/{{ item }}.conf"
-      owner=root
-      group=root
-      mode=0644
-    with_items: swatch_confs
-    tags:
-      - swatch
+- name: Swatch | Create irker swatch integration shell script
+  template:
+    src=irker-swatch.sh.j2
+    dest=/usr/local/bin/irker-swatch
+    owner=root
+    group=root
+    mode=0755
+  when: swatch_irker_server is defined and swatch_irker_target
+  tags:
+    - irker
 
-  - name: Swatch | Create the Monit swatch conf files
-    template:
-      src="{{ item }}.monit.j2"
-      dest="/etc/monit/conf.d/{{ item }}.conf"
-      owner=root
-      group=root
-      mode=0700
-    with_items: swatch_monits
-    tags:
-      - monit
+- name: Swatch | Create irker sender script
+  template:
+    src=irker-swatch.py.j2
+    dest=/usr/local/bin/irk
+    owner=root
+    group=root
+    mode=0755
+  when: swatch_irker_server is defined and swatch_irker_target
+  tags:
+    - irker
 
-  - name: Swatch | Stop swatch if running
-    service:
-      name=swatch_{{ item }}
-      state=stopped
-    tags:
-      - swatch
-    with_items: monit_swatch
-    ignore_errors: True
+- name: Swatch | Create swatch conf files
+  template:
+    src: "swatch.conf.j2"
+    dest: "/etc/swatch/{{ item.name }}.conf"
+    owner: root
+    group: root
+    mode: 0644
+  with_items: "{{ swatch_files }}"
+  tags:
+    - swatch
 
-  - name: Swatch | Double chec swatch is not already running
-    command: /usr/bin/pkill -9 swatch
-    ignore_errors: True
-    tags:
-      - swatch
+- name: Swatch | Create the Monit swatch conf files
+  template:
+    src="swatch.monit.j2"
+    dest="/etc/monit/conf.d/{{ item.name }}.conf"
+    owner=root
+    group=root
+    mode=0700
+  with_items: "{{ swatch_files }}"
+  when: swatch_monit is defined
+  ignore_errors: True
+  tags:
+    - monit
 
-  - name: Swatch | start new swatch scripts
-    service:
-      name=swatch_{{ item }}
-      enabled=yes
-      state=started
-    with_items: swatch_inits
-    tags:
-      - swatch
+- name: Swatch | Stop swatch if running
+  service:
+    name=swatch_{{ item.name }}
+    state=stopped
+  tags:
+    - swatch
+  with_items: "{{ swatch_files }}"
+  ignore_errors: True
+
+- name: Swatch | Double check swatch is not already running
+  command: /usr/bin/pkill -9 swatch
+  ignore_errors: True
+  tags:
+    - swatch
+
+- name: Swatch | start new swatch scripts
+  service:
+    name=swatch_{{ item.name }}
+    enabled=yes
+    state=started
+  with_items: "{{ swatch_files }}"
+  tags:
+    - swatch
