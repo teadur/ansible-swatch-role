@@ -104,17 +104,6 @@
   tags:
    - monit
 
-- name: Swatch | Create swatch conf files
-  template:
-    src: "swatch.conf.j2"
-    dest: "/etc/swatch/{{ item.name }}.conf"
-    owner: root
-    group: root
-    mode: 0644
-  with_items: "{{ swatch_files }}"
-  tags:
-    - swatch
-
 - name: Swatch | Create the Monit swatch conf files
   template:
     src="swatch.monit.j2"
