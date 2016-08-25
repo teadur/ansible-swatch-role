@@ -69,53 +69,40 @@
   tags:
     - slack
 
-<<<<<<< HEAD
-  - name: Swatch | Create irker swatch integration shell script
-    template:
-      src=irker-swatch.sh.j2
-      dest=/usr/local/bin/irker-swatch
-      owner=root
-      group=root
-      mode=0755
-    when: swatch_irker_server is defined and swatch_irker_target
-    tags:
-      - irker
+- name: Swatch | Create irker swatch integration shell script
+  template:
+    src=irker-swatch.sh.j2
+    dest=/usr/local/bin/irker-swatch
+    owner=root
+    group=root
+    mode=0755
+  when: swatch_irker_server is defined and swatch_irker_target
+  tags:
+    - irker
 
-  - name: Swatch | Create irker sender script
-    template:
-      src=irker-swatch.py.j2
-      dest=/usr/local/bin/irk
-      owner=root
-      group=root
-      mode=0755
-    when: swatch_irker_server is defined and swatch_irker_target
-    tags:
-      - irker
+- name: Swatch | Create irker sender script
+  template:
+    src=irker-swatch.py.j2
+    dest=/usr/local/bin/irk
+    owner=root
+    group=root
+    mode=0755
+  when: swatch_irker_server is defined and swatch_irker_target
+  tags:
+    - irker
 
-
-  - name: Swatch | Create swatch conf files
-    template:
-      src="{{ item }}.conf.j2"
-      dest="/etc/swatch/{{ item }}.conf"
-      owner=root
-      group=root
-      mode=0644
-    with_items: swatch_confs
-    tags:
-      - swatch
-
-  - name: Swatch | Create the Monit swatch conf files
-    template:
-      src="{{ item }}.monit.j2"
-      dest="/etc/monit/conf.d/{{ item }}.conf"
-      owner=root
-      group=root
-      mode=0700
-    with_items: swatch_monits
-    when: swatch_monit is true
-    ignore_errors: True
-    tags:
-      - monit
+- name: Swatch | Create the Monit swatch conf files
+  template:
+    src="{{ item }}.monit.j2"
+    dest="/etc/monit/conf.d/{{ item }}.conf"
+    owner=root
+    group=root
+    mode=0700
+  with_items: swatch_monits
+  when: swatch_monit is true
+  ignore_errors: True
+  tags:
+   - monit
 
 - name: Swatch | Create swatch conf files
   template:
