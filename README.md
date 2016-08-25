@@ -1,7 +1,7 @@
 Ansible Swatch Role
 =========
 
-An Ansible role to install Swatch: The Simple Log Watcher with a handy Slack integration & monit files
+An Ansible role to install Swatch: The Simple Log Watcher with a handy Slack/Irker integration & monit files.
 
 Requirements
 ------------
@@ -11,35 +11,15 @@ Tested on Ubuntu Trusty and Precise. Uses apt to install things so it won't work
 Role Variables
 --------------
 
-This role is designed to watch 4 different log files:
-
-```
-/var/log/docker.log
-/var/log/syslog
-/var/log/auth.log
-/var/log/apache/error.log
-```
-
-Which files get watched gets defined by the `monit_swatch` in your vars.
+This role is designed to watch log files. Which files get watched gets defined by the `swatch_files` in your vars.
 
 You'll also need to set {{ swatch_email_to }} somewhere to have email delivered.
 
-This role will also post to Slack from swatch using curl in a shell script. This uses the following vars with examples:
+This role will also post to Slack or Irker from swatch using curl in a shell script.
 
-```
-swatch_email_to: "none@example.com"
-slack_swatch_channel: "swatch"
-slack_swatch_username: "swatchbot"
-slack_swatch_error_text: " Swatch error from : _'$HOSTNAME'_ : `\'\"\'$ERROR\'\"\'` "
-slack_swatch_icon: ":bangbang:" 
-slack_swatch_webhook_url: "https://hooks.slack.com/services/ef2wqft/efw2e4/whateverelseitlookslikehere"
-swatch_inits & swatch_confs & swatch_monits
-   - syslog
-   - auth.log
-   - docker.log
-```
+This gets around the need for creating a .conf and .init for every log file. Any log file can be added to swatch_files -- and defined per inventory.
 
-that `swatch_slack_error_text:` can be a bit tricky with all the quotes and stuff.
+e.g. For Slack:
 
 Those vars can be used to build a shell script like this:
 
@@ -52,14 +32,6 @@ curl -X POST --data-urlencode 'payload={"channel": "swatch", "username": "'$HOST
 ```
 
 That shell script ends up in `/usr/local/bin/slack-swatch.sh`
-
-All the files are created from the `swatch_` vars:
-```
-swatch_inits  & swatch_confs & swatch_monits
-   - syslog
-   - auth.log
-   - docker.log
-```
 
 Example Playbook
 ----------------
@@ -84,3 +56,10 @@ Author Information
 ------------------
 
 - LYRASIS
+
+License
+---
+
+The project is available as open source under the terms of the [MIT License](http://opensource.org/licenses/MIT).
+
+---

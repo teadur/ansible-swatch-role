@@ -1,0 +1,4 @@
+check process swatch.{{ item.name }}.log with pidfile /var/run/swatch-{{ item.name }}.pid
+  start program = "/etc/init.d/swatch_{{ item.name }} start"
+  stop program  = "/etc/init.d/swatch_{{ item.name }} stop"
+  if 5 restarts within 5 cycles then alert
