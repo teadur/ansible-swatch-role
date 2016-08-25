@@ -1,5 +1,0 @@
-perlcode my ($month, $day, $time, $host_name, @message) = split(/\s+/);
-
-watchfor /Segmentation/
-        exec echo "Subject:SWATCH Found Apache Segmentation Fault on $host_name\n\n$_\n" | sendmail "{{ swatch_email_to }}"
-
