@@ -7,7 +7,7 @@ start()
 
 stop()
 {
-PID=`cat /var/run/swatch-{{ item.name }}log.pid`
+PID=`cat /var/run/swatch-{{ item.name }}.pid`
 kill $PID
 }
 
